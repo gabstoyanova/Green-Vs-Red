@@ -6,8 +6,6 @@ public class Input {
 
     public int[] getBoardSize() throws IOException {
         int[] boardSize = new int[2];
-        int cols = 0;
-        int rows = 0;
 
         System.out.println("Please enter grid size in format x,y\nYour input has to be in the range x <= y < 1000");
         String boardSizeInput = this.scanner.nextLine();
@@ -15,11 +13,11 @@ public class Input {
         String x = size[0].trim();
         String y = size[1].trim();
 
-        cols = Integer.parseInt(x);
-        rows = Integer.parseInt(y);
+        int cols = Integer.parseInt(x);
+        int rows = Integer.parseInt(y);
 
         if (cols > rows || rows >= 1000 || cols <= 0){
-            throw new IOException("Please enter valid data!");
+            throw new IOException("Please enter valid data! x <= y < 1000!");
         }
 
         boardSize[0] = rows;
@@ -28,14 +26,15 @@ public class Input {
         return boardSize;
     }
 
-    public int[][] getGenerationZero(int y, int x) throws IOException {
-        int[][] generationZero = new int[y][x];
+    public Board getGenerationZero(int y, int x) throws IOException {
+
+        int[][] generationZeroGrid = new int[y][x];
+
         System.out.println("Please enter the grid for Generation Zero");
 
         for (int i = 0; i < y; i++) {
             String inputLine = this.scanner.nextLine();
             int numberOfLineElements = inputLine.length();
-
 
             for (int j = 0; j < x; j++) {
                 char character = inputLine.charAt(j);
@@ -43,16 +42,16 @@ public class Input {
                 if (numberOfLineElements > y || rowElement != 1 && rowElement != 0){
                     throw new IOException("Please enter valid data! \nA grid line should consist only of 1s and 0s and be as many characters as your input y value.");
                 }
-                generationZero[i][j] = rowElement;
+                generationZeroGrid[i][j] = rowElement;
             }
         }
+        Board generationZero = new Board(generationZeroGrid);
         return generationZero;
     }
 
     public int[] getLastArguments(){
 
         int[] lastArguments = new int[3];
-        String[] cellCoordinatesAndNComponents = null;
 
         System.out.println("Please enter coordinates of a chosen cell, and generation N.\nYou input should be in the format x1,y1,N.");
         String cellCoordinatesAndN[] = this.scanner.nextLine().split(",");

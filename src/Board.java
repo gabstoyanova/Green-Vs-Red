@@ -1,11 +1,18 @@
-import java.util.Arrays;
-
 public class Board {
 
-    public int getGenerationsTheCellWasGreen(int[][] generationZero, int y1, int x1, int n){
+    private int x, y;
+    public int[][] grid;
 
-        int[][] board = generationZero;
-        int wantedCell = generationZero[x1][y1];
+    public Board(int[][] grid){
+        this.grid = grid;
+        this.x = grid[0].length;
+        this.y = grid.length;
+    }
+
+    public int getGenerationsTheCellWasGreen(Board generationZero, int y1, int x1, int n){
+
+        Board current = generationZero;
+        int wantedCell = generationZero.grid[x1][y1];
         int numberOfGenerationsTheCellWasGreen = 0;
 
         if (wantedCell == 1) {
@@ -14,9 +21,9 @@ public class Board {
 
         // for each of the next generations
         for (int i = 0; i < n; i++) {
-            int[][] nextGeneration = getNextGeneration(board);
-            board = nextGeneration;
-            wantedCell = board[y1][x1];
+            Board nextGeneration = getNextGeneration(current);
+            current = nextGeneration;
+            wantedCell = current.grid[y1][x1];
 
             if (wantedCell == 1) {
                 numberOfGenerationsTheCellWasGreen++;
@@ -26,81 +33,81 @@ public class Board {
         return numberOfGenerationsTheCellWasGreen;
     }
 
-    private int[][] getNextGeneration(int[][] board){
-        int y = board.length;
-        int x = board[0].length;
+    private Board getNextGeneration(Board board){
+        int y = board.grid.length;
+        int x = board.grid[0].length;
 
-        int[][] nextGeneration = new int[y][x];
+        int[][] nextGenerationGrid = new int[y][x];
 
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
 
-                int currentColor = board[i][j];
+                int currentColor = board.grid[i][j];
                 int greenNeighbours = getGreenNeighbours(board, i, j);
 
                 int newCellColor = changeColor(currentColor, greenNeighbours);
-                nextGeneration[i][j] = newCellColor;
+                nextGenerationGrid[i][j] = newCellColor;
             }
         }
-        return nextGeneration;
+        Board nextGeneration = new Board(nextGenerationGrid);
+        return nextGeneration ;
     }
 
-    private int getGreenNeighbours(int[][] board, int i, int j){
-        int y = board.length;
-        int x = board[0].length;
+    private int getGreenNeighbours(Board board, int i, int j){
+        int y = board.grid.length;
+        int x = board.grid[0].length;
         int greenCount = 0;
 
                 // upper left cell
                 if (i - 1 >= 0 && j - 1 >= 0) {
-                    if (board[i - 1][j - 1]  == 1) {
+                    if (board.grid[i - 1][j - 1]  == 1) {
                         greenCount++;
                     }
                 }
                 // upper center cell
                 if (i - 1 >= 0) {
-                    if (board[i - 1][j] == 1) {
+                    if (board.grid[i - 1][j] == 1) {
                         greenCount++;
                     }
                 }
                 // upper right cell
                 if (i - 1 >= 0 && j + 1 < y) {
-                    if (board[i - 1][j + 1] == 1) {
+                    if (board.grid[i - 1][j + 1] == 1) {
                         greenCount++;
                     }
                 }
                 // lower left cell
                 if (i + 1 < x && j - 1 >= 0) {
-                    if (board[i + 1][j - 1] == 1) {
+                    if (board.grid[i + 1][j - 1] == 1) {
                         greenCount++;
                     }
                 }
                 // lower center cell
                 if (i + 1 < x) {
-                    if (board[i + 1][j] == 1) {
+                    if (board.grid[i + 1][j] == 1) {
                         greenCount++;
                     }
                 }
                 // lower right cell
                 if (i + 1 < x && j + 1 < y) {
-                    if (board[i + 1][j + 1] == 1) {
+                    if (board.grid[i + 1][j + 1] == 1) {
                         greenCount++;
                     }
                 }
                 // left cell
                 if (j - 1 >= 0) {
-                    if (board[i][j - 1] == 1) {
+                    if (board.grid[i][j - 1] == 1) {
                         greenCount++;
                     }
                 }
                 // right cell
                 if (j + 1 < y) {
-                    if (board[i][j + 1] == 1) {
+                    if (board.grid[i][j + 1] == 1) {
                         greenCount++;
                     }
                 }
         return greenCount;
     }
-
 
     private int redCellsChange(int neighbourCount) {
 
@@ -117,7 +124,7 @@ public class Board {
     }
 
     //  3. Each green cell surrounded by 0, 1, 4, 5, 7 or 8 green neighbours will become red in the next generation.
-    //  4. A green cell will stay green in the next generation  if it has either 2, 3 or 6 green neighbours.
+    //  4. A green cell will stay green in the next generation if it has either 2, 3 or 6 green neighbours.
     private int greenCellsChange(int neighbourCount) {
 
         int cellColor = 0;
