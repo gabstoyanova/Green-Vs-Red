@@ -53,8 +53,8 @@ public class Input {
 
         int[] lastArguments = new int[3];
 
-        System.out.println("Please enter coordinates of a chosen cell, and generation N.\nYou input should be in the format x1,y1,N.");
-        String cellCoordinatesAndN[] = this.scanner.nextLine().split(",");
+        System.out.println("Please enter coordinates of a chosen cell, and generation N.\nYou input should be in the format x,y,N.");
+        String[] cellCoordinatesAndN = this.scanner.nextLine().split(",");
 
         String x1 = cellCoordinatesAndN[0].trim();
         String y1 = cellCoordinatesAndN[1].trim();

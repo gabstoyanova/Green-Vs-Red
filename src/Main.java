@@ -17,7 +17,7 @@ public class Main {
 
         int generationsTheCellWasGreen = generationZeroGrid.getGenerationsTheCellWasGreen(generationZeroGrid, rowCoordinate, columnCoordinate, n);
 
-        System.out.println(generationsTheCellWasGreen);
+        System.out.println("This cell was green in " + generationsTheCellWasGreen + " generations from 0 to " + n);
     }
 
 }

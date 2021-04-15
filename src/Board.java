@@ -1,7 +1,7 @@
 public class Board {
 
     private int x, y;
-    public int[][] grid;
+    private int[][] grid;
 
     public Board(int[][] grid){
         this.grid = grid;
@@ -21,8 +21,8 @@ public class Board {
 
         // for each of the next generations
         for (int i = 0; i < n; i++) {
-            Board nextGeneration = getNextGeneration(current);
-            current = nextGeneration;
+//            Board nextGeneration =
+            current = getNextGeneration(current);
             wantedCell = current.grid[y1][x1];
 
             if (wantedCell == 1) {
@@ -50,109 +50,45 @@ public class Board {
             }
         }
         Board nextGeneration = new Board(nextGenerationGrid);
-        return nextGeneration ;
+        return nextGeneration;
     }
 
     private int getGreenNeighbours(Board board, int i, int j){
-        int y = board.grid.length;
-        int x = board.grid[0].length;
+        int y = board.y;
+        int x = board.x;
         int greenCount = 0;
 
-                // upper left cell
-                if (i - 1 >= 0 && j - 1 >= 0) {
-                    if (board.grid[i - 1][j - 1]  == 1) {
+        for (int row = i - 1; row <= i + 1; row++){
+            for (int col = j - 1; col <= j + 1; col++) {
+                if (row >= 0 && row < x && col >= 0 && col < y){
+                    if (row == i && col == j){
+                        continue;
+                    }
+                    if (board.grid[row][col] == 1){
                         greenCount++;
                     }
                 }
-                // upper center cell
-                if (i - 1 >= 0) {
-                    if (board.grid[i - 1][j] == 1) {
-                        greenCount++;
-                    }
-                }
-                // upper right cell
-                if (i - 1 >= 0 && j + 1 < y) {
-                    if (board.grid[i - 1][j + 1] == 1) {
-                        greenCount++;
-                    }
-                }
-                // lower left cell
-                if (i + 1 < x && j - 1 >= 0) {
-                    if (board.grid[i + 1][j - 1] == 1) {
-                        greenCount++;
-                    }
-                }
-                // lower center cell
-                if (i + 1 < x) {
-                    if (board.grid[i + 1][j] == 1) {
-                        greenCount++;
-                    }
-                }
-                // lower right cell
-                if (i + 1 < x && j + 1 < y) {
-                    if (board.grid[i + 1][j + 1] == 1) {
-                        greenCount++;
-                    }
-                }
-                // left cell
-                if (j - 1 >= 0) {
-                    if (board.grid[i][j - 1] == 1) {
-                        greenCount++;
-                    }
-                }
-                // right cell
-                if (j + 1 < y) {
-                    if (board.grid[i][j + 1] == 1) {
-                        greenCount++;
-                    }
-                }
+            }
+        }
         return greenCount;
     }
 
-    private int redCellsChange(int neighbourCount) {
+    //  Each green cell surrounded by 0, 1, 4, 5, 7 or 8 green neighbours will become red in the next generation.
+    //  and will stay green in the next generation if it has either 2, 3 or 6 green neighbours.
+    //  Similarly, each red cell that is surrounded by exactly 3 or 6 green cells will become green.
 
-        int cellColor = 0;
-        if (neighbourCount == 3 || neighbourCount == 6){
-            cellColor = 1;
-        } else if (neighbourCount == 0 || neighbourCount == 1 ||
-                neighbourCount == 2 || neighbourCount == 4 ||
-                neighbourCount == 5 || neighbourCount == 7 ||
-                neighbourCount == 8){
-            cellColor = 0;
-        }
-        return cellColor;
-    }
-
-    //  3. Each green cell surrounded by 0, 1, 4, 5, 7 or 8 green neighbours will become red in the next generation.
-    //  4. A green cell will stay green in the next generation if it has either 2, 3 or 6 green neighbours.
-    private int greenCellsChange(int neighbourCount) {
-
-        int cellColor = 0;
-        if (neighbourCount == 2 || neighbourCount == 3 || neighbourCount == 6) {
-            cellColor = 1;
-        } else if (neighbourCount == 0 || neighbourCount == 1 ||
-                neighbourCount == 4 || neighbourCount == 5 ||
-                neighbourCount == 7 || neighbourCount == 8) {
-            cellColor = 0;
-        }
-        return cellColor;
-    }
-
-    public int changeColor(int currentColor, int greenNeighbours) {
-
+    private int changeColor(int current, int greenNeighboursCount){
         int newColor = 0;
-
-        switch (currentColor) {
-            //if current color is red:
-            case 0:
-                newColor = redCellsChange(greenNeighbours);
-                break;
-
-            // if current color is green:
-            case 1:
-                newColor = greenCellsChange(greenNeighbours);
-                break;
+        if (current == 0){
+            if (greenNeighboursCount == 3 || greenNeighboursCount == 6) {
+                newColor = 1;
+            }
+        } else if (current == 1){
+            if (greenNeighboursCount == 2 || greenNeighboursCount == 3 || greenNeighboursCount == 6) {
+                newColor = 1;
+            }
         }
         return newColor;
     }
+
 }
