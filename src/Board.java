@@ -3,16 +3,27 @@ public class Board {
     private int x, y;
     private int[][] grid;
 
-    public Board(int[][] grid){
+    public Board(int[][] grid) {
         this.grid = grid;
         this.x = grid[0].length;
         this.y = grid.length;
     }
 
-    public int getGenerationsTheCellWasGreen(Board generationZero, int y1, int x1, int n){
+    public int getX() {
+        return this.x;
+    }
 
+    public int getY() {
+        return this.y;
+    }
+
+    public int[][] getGrid() {
+        return this.grid;
+    }
+
+    public int getGenerationsTheCellWasGreen(Board generationZero, int y1, int x1, int n){
         Board current = generationZero;
-        int wantedCell = generationZero.grid[x1][y1];
+        int wantedCell = generationZero.getGrid()[x1][y1];
         int numberOfGenerationsTheCellWasGreen = 0;
 
         if (wantedCell == 1) {
@@ -23,7 +34,7 @@ public class Board {
         for (int i = 0; i < n; i++) {
 //            Board nextGeneration =
             current = getNextGeneration(current);
-            wantedCell = current.grid[y1][x1];
+            wantedCell = current.getGrid()[y1][x1];
 
             if (wantedCell == 1) {
                 numberOfGenerationsTheCellWasGreen++;
@@ -34,15 +45,16 @@ public class Board {
     }
 
     private Board getNextGeneration(Board board){
-        int y = board.grid.length;
-        int x = board.grid[0].length;
+        int[][] grid = board.getGrid();
+        int y = grid.length;
+        int x = grid[0].length;
 
         int[][] nextGenerationGrid = new int[y][x];
 
         for (int i = 0; i < x; i++) {
             for (int j = 0; j < y; j++) {
 
-                int currentColor = board.grid[i][j];
+                int currentColor = grid[i][j];
                 int greenNeighbours = getGreenNeighbours(board, i, j);
 
                 int newCellColor = changeColor(currentColor, greenNeighbours);
@@ -54,8 +66,8 @@ public class Board {
     }
 
     private int getGreenNeighbours(Board board, int i, int j){
-        int y = board.y;
-        int x = board.x;
+        int y = board.getY();
+        int x = board.getX();
         int greenCount = 0;
 
         for (int row = i - 1; row <= i + 1; row++){
@@ -64,7 +76,7 @@ public class Board {
                     if (row == i && col == j){
                         continue;
                     }
-                    if (board.grid[row][col] == 1){
+                    if (board.getGrid()[row][col] == 1){
                         greenCount++;
                     }
                 }
